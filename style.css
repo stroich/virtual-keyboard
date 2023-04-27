@@ -44,6 +44,10 @@
   line-height: 50px;
 }
 
+.virtual-keyboard-element:hover{
+  cursor: pointer;
+}
+
 .element-wide{
   width: 115px;
   padding: 0 10px;
@@ -59,4 +63,9 @@
 .delete{
   width: auto;
   padding: 0 10px;
+}
+.active{
+  color: white;
+  background: #585858;
+  border: 1px solid #585858;
 }
