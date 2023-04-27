@@ -9,7 +9,7 @@
 }
 
 .container{
-  margin: 5% 20%;
+  margin: 5vh 20vw;
   text-align: center;
 }
 
@@ -26,7 +26,6 @@
 
 .virtual-keyboard{
   width: 100%;
-  height: 30vh;
 }
 
 .virtual-keyboard-row{
@@ -68,4 +67,12 @@
   color: white;
   background: #585858;
   border: 1px solid #585858;
+}
+
+.text{
+  margin-top: 3vh;
+}
+
+.text-element{
+  margin-bottom: 1vh;
 }
