@@ -1,5 +1,6 @@
 //the generation of DOM elements is implemented - start
 let language = 'en';
+let capsLock =false;
 let keyboard = [
     [
         {
@@ -93,10 +94,9 @@ function changeLanguage(){
     rowsKeyboard.forEach((el,ind)=>{
         let elementKeyboard = el.querySelectorAll('.virtual-keyboard-element');
         elementKeyboard.forEach((element,index)=>{
-            element.innerHTML = keyboard[ind][0][language][index]
+            element.innerHTML = keyboard[ind][0][language][index];
         })
     })
-
 }
 function setLocalStorage() {
     localStorage.setItem('language', language);
@@ -125,9 +125,28 @@ document.addEventListener('keydown',(event)=>{
         if(language==='en'){
             language ='ru';
             changeLanguage();
+            if(capsLock){
+                capsLock = false;
+                enableCapslock();
+                capsLock = true;
+            }
         }else{
             language='en';
             changeLanguage();
+            if(capsLock){
+                capsLock = false;
+                enableCapslock();
+                capsLock = true;
+            }
+        }
+    }
+    if(event.code==='CapsLock'){
+        if (capsLock){
+            enableCapslock();
+            capsLock = false;
+        }else{
+            enableCapslock();
+            capsLock = true;
         }
     }
 })
@@ -138,11 +157,28 @@ document.addEventListener('keyup',(event)=>{
             el.classList.remove('active');
         }
     })
+    if(event.code==='CapsLock'&& capsLock){
+        let capsLockElement =document.querySelector(`.virtual-keyboard-element[data-code='CapsLock']`);
+        capsLockElement.classList.add('active');
+
+    }
 })
 
 let elementKeyboard = document.querySelectorAll('.virtual-keyboard-element');
 
-
+function enableCapslock (){
+    elementKeyboard = document.querySelectorAll('.virtual-keyboard-element');
+    elementKeyboard.forEach(el=>{
+        let ruLetter = ['Comma', 'Period','Semicolon', 'Quote','BracketLeft', 'BracketRight'];
+        if(el.dataset.code.includes('Key') || ruLetter.includes(el.dataset.code)){
+            if (capsLock){
+                el.textContent = el.textContent.toLowerCase();
+            }else{
+                el.textContent = el.textContent.toUpperCase();
+            }
+        }
+    })
+}
 function clickElement(event){
     let symbol =['Backquote','Minus', 'Equal','BracketLeft', 'BracketRight', 'Backslash','Semicolon', 'Quote','Slash','Comma', 'Period'];
     if (symbol.includes(event.currentTarget.dataset.code)){
@@ -160,6 +196,18 @@ function clickElement(event){
     }
     if(event.currentTarget.dataset.code==='Tab'){
         textarea.value = textarea.value +'    ';
+    }
+    if(event.currentTarget.dataset.code==='CapsLock'){
+        if (capsLock){
+            event.currentTarget.classList.toggle('active');
+            enableCapslock();
+            capsLock = false;
+        }else{
+            event.currentTarget.classList.toggle('active');
+            enableCapslock();
+            capsLock = true;
+        }
+
     }
 }
 
