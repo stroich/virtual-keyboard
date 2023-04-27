@@ -87,7 +87,7 @@ function generatingElements(){
 }
 generatingElements();
 //the generation of DOM elements is implemented - end
-//language start
+
 function changeLanguage(){
     let rowsKeyboard = document.querySelectorAll('.virtual-keyboard-row');
     rowsKeyboard.forEach((el,ind)=>{
@@ -108,9 +108,11 @@ function getLocalStorage() {
         changeLanguage();
     }
 }
-window.addEventListener('load', getLocalStorage)
-//language end
-// pressing a key on a physical keyboard highlights the key on the virtual keyboard -start
+window.addEventListener('load', getLocalStorage);
+
+let textarea =document.querySelector('textarea');
+textarea.focus();
+textarea.addEventListener('blur',()=>textarea.focus());
 
 document.addEventListener('keydown',(event)=>{
     let elementKeyboard = document.querySelectorAll('.virtual-keyboard-element');
@@ -137,5 +139,31 @@ document.addEventListener('keyup',(event)=>{
         }
     })
 })
-// pressing a key on a physical keyboard highlights the key on the virtual keyboard -end
+
+let elementKeyboard = document.querySelectorAll('.virtual-keyboard-element');
+
+
+function clickElement(event){
+    let symbol =['Backquote','Minus', 'Equal','BracketLeft', 'BracketRight', 'Backslash','Semicolon', 'Quote','Slash','Comma', 'Period'];
+    if (symbol.includes(event.currentTarget.dataset.code)){
+        textarea.value = textarea.value +event.currentTarget.outerText;
+    }
+    if(event.currentTarget.dataset.code.includes('Digit') || event.currentTarget.dataset.code.includes('Key')){
+        textarea.value = textarea.value +event.currentTarget.outerText;
+    }
+    if (event.currentTarget.dataset.code==='Backspace'){
+        console.log(textarea.value.slice(0,textarea.value.length))
+        textarea.value = textarea.value.slice(0,textarea.value.length-1);
+    }
+    if(event.currentTarget.dataset.code==='Space'){
+        textarea.value = textarea.value +' ';
+    }
+    if(event.currentTarget.dataset.code==='Tab'){
+        textarea.value = textarea.value +'    ';
+    }
+}
+
+elementKeyboard.forEach(el=>{
+    el.addEventListener('click', clickElement);
+})
 
