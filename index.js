@@ -240,7 +240,7 @@ function clickElement(event){
             break;
         case 'CapsLock':
             if (capsLock){
-                event.currentTarget.classList.toggle('active');
+                event.currentTarget.classList.remove('active');
                 enableCapslock();
                 capsLock = false;
             }else{
@@ -309,5 +309,17 @@ function clickElement(event){
 
 elementKeyboard.forEach(el=>{
     el.addEventListener('click', clickElement);
+    el.addEventListener('mousedown',(event)=>{
+        event.currentTarget.classList.add('active');
+    });
+    el.addEventListener('mouseup',(event)=>{
+        event.currentTarget.classList.remove('active');
+    });
+    el.addEventListener('mouseover',(event)=>{
+        event.currentTarget.classList.add('hover');
+    });
+    el.addEventListener('mouseout',(event)=>{
+        event.currentTarget.classList.remove('hover');
+    });
 })
 
