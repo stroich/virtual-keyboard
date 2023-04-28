@@ -173,6 +173,14 @@ document.addEventListener('keydown',(event)=>{
     if (event.code==='Enter'){
         rowPos++;
     }
+    if (event.code==='ArrowUp'){
+        recalculatePositionUp();
+        rowPos--;
+    }
+    if (event.code==='ArrowDown'){
+        recalculatePositionDown();
+        rowPos++;
+    }
 })
 document.addEventListener('keyup',(event)=>{
     let elementKeyboard = document.querySelectorAll('.virtual-keyboard-element');
@@ -202,6 +210,36 @@ function enableCapslock (){
             }
         }
     })
+}
+function recalculatePositionUp (){
+    let valueArrUp=textarea.value.split('\n');
+    let numberPosValue =valueArrUp[rowPos].length-caretPos;
+    if (numberPosValue>valueArrUp[rowPos-1].length){
+        numberPosValue =valueArrUp[rowPos-1].length;
+        caretPos = 0;
+    }else{
+        caretPos=valueArrUp[rowPos-1].length-numberPosValue;
+    }
+    for (let i = 0; i < rowPos-1 ; i++){
+        numberPosValue+=valueArrUp[i].length+1;
+    }
+    cursorPos = textarea.value.length-numberPosValue;
+    return numberPosValue;
+}
+function recalculatePositionDown (){
+    let valueArrDown=textarea.value.split('\n');
+    let numberPos = valueArrDown[rowPos].length-caretPos;
+    if (numberPos > valueArrDown[rowPos+1].length){
+        numberPos = valueArrDown[rowPos+1].length;
+        caretPos = 0;
+    }else{
+        caretPos = valueArrDown[rowPos+1].length-numberPos;
+    }
+    for (let i = 0; i < rowPos+1 ; i++){
+        numberPos+=valueArrDown[i].length+1;
+    }
+    cursorPos = textarea.value.length-numberPos;
+    return numberPos;
 }
 function clickElement(event){
     let symbol =['Backquote','Minus', 'Equal','BracketLeft', 'BracketRight', 'Backslash','Semicolon', 'Quote','Slash','Comma', 'Period'];
@@ -269,37 +307,16 @@ function clickElement(event){
             break;
         case 'ArrowUp':
             if (rowPos!==0){
-                let valueArrUp=textarea.value.split('\n');
-                let numberPosValue =valueArrUp[rowPos].length-caretPos;
-                if (numberPosValue>valueArrUp[rowPos-1].length){
-                    numberPosValue =valueArrUp[rowPos-1].length;
-                    caretPos = 0;
-                }else{
-                    caretPos=valueArrUp[rowPos-1].length-numberPosValue;
-                }
-                for (let i = 0; i < rowPos-1 ; i++){
-                    numberPosValue+=valueArrUp[i].length+1;
-                }
-                cursorPos = textarea.value.length-numberPosValue;
-                textarea.setSelectionRange(numberPosValue,numberPosValue);
+                let positionUp =recalculatePositionUp ();
+                textarea.setSelectionRange(positionUp,positionUp);
                 rowPos--;
             }
             break;
         case 'ArrowDown':
             let valueArrDown=textarea.value.split('\n');
             if (rowPos!==valueArrDown.length-1){
-                let numberPos = valueArrDown[rowPos].length-caretPos;
-                if (numberPos > valueArrDown[rowPos+1].length){
-                    numberPos = valueArrDown[rowPos+1].length;
-                    caretPos = 0;
-                }else{
-                    caretPos = valueArrDown[rowPos+1].length-numberPos;
-                }
-                for (let i = 0; i < rowPos+1 ; i++){
-                    numberPos+=valueArrDown[i].length+1;
-                }
-                cursorPos = textarea.value.length-numberPos;
-                textarea.setSelectionRange(numberPos,numberPos);
+                let positionDown = recalculatePositionDown();
+                textarea.setSelectionRange(positionDown,positionDown);
                 rowPos++;
             }
             break;
