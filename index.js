@@ -111,7 +111,9 @@ function getLocalStorage() {
 window.addEventListener('load', getLocalStorage);
 
 let textarea =document.querySelector('textarea');
-let caretPos =0;
+let caretPos = 0;
+let rowPos = 0;
+let cursorPos =0;
 textarea.focus();
 textarea.addEventListener('blur',()=>textarea.focus());
 
@@ -152,20 +154,25 @@ document.addEventListener('keydown',(event)=>{
     }
     if(event.code==='ArrowLeft'){
         if (caretPos!==textarea.value.length){
+            cursorPos+=1;
             caretPos+=1;
         }
     }
     if (event.code==='ArrowRight' || event.code==='Delete'){
         if (caretPos!==0){
+            cursorPos-=1;
             caretPos-=1;
         }
     }
     if (event.code==='Backspace'){
         if (caretPos>textarea.value.length){
+            cursorPos-=1;
             caretPos-=1;
         }
     }
-
+    if (event.code==='Enter'){
+        rowPos++;
+    }
 })
 document.addEventListener('keyup',(event)=>{
     let elementKeyboard = document.querySelectorAll('.virtual-keyboard-element');
@@ -209,6 +216,7 @@ function clickElement(event){
             let newValue= textarea.value.split('');
             newValue.splice(textarea.value.length-caretPos-1,1);
             if (caretPos>textarea.value.length){
+                cursorPos-=1;
                 caretPos-=1;
             }
             textarea.value = newValue.join('');
@@ -218,6 +226,7 @@ function clickElement(event){
             let newValueDelete= textarea.value.split('');
             newValueDelete.splice(textarea.value.length-caretPos,1);
             if (caretPos!==0){
+                cursorPos-=1;
                 caretPos-=1;
             }
             textarea.value = newValueDelete.join('');
@@ -242,16 +251,59 @@ function clickElement(event){
             break;
         case 'ArrowLeft':
             if (caretPos!==textarea.value.length){
+                cursorPos+=1;
                 caretPos+=1;
             }
-            textarea.setSelectionRange(textarea.value.length-caretPos,textarea.value.length-caretPos);
+            textarea.setSelectionRange(textarea.value.length-cursorPos,textarea.value.length-cursorPos);
             break;
         case 'ArrowRight':
             if (caretPos!==0){
+                cursorPos-=1;
                 caretPos-=1;
             }
-            textarea.setSelectionRange(textarea.value.length-caretPos,textarea.value.length-caretPos);
+            textarea.setSelectionRange(textarea.value.length-cursorPos,textarea.value.length-cursorPos);
             break;
+        case 'Enter':
+            textarea.value = textarea.value +'\n';
+            rowPos++;
+            break;
+        case 'ArrowUp':
+            if (rowPos!==0){
+                let valueArrUp=textarea.value.split('\n');
+                let numberPosValue =valueArrUp[rowPos].length-caretPos;
+                if (numberPosValue>valueArrUp[rowPos-1].length){
+                    numberPosValue =valueArrUp[rowPos-1].length;
+                    caretPos = 0;
+                }else{
+                    caretPos=valueArrUp[rowPos-1].length-numberPosValue;
+                }
+                for (let i = 0; i < rowPos-1 ; i++){
+                    numberPosValue+=valueArrUp[i].length+1;
+                }
+                cursorPos = textarea.value.length-numberPosValue;
+                textarea.setSelectionRange(numberPosValue,numberPosValue);
+                rowPos--;
+            }
+            break;
+        case 'ArrowDown':
+            let valueArrDown=textarea.value.split('\n');
+            if (rowPos!==valueArrDown.length-1){
+                let numberPos = valueArrDown[rowPos].length-caretPos;
+                if (numberPos > valueArrDown[rowPos+1].length){
+                    numberPos = valueArrDown[rowPos+1].length;
+                    caretPos = 0;
+                }else{
+                    caretPos = valueArrDown[rowPos+1].length-numberPos;
+                }
+                for (let i = 0; i < rowPos+1 ; i++){
+                    numberPos+=valueArrDown[i].length+1;
+                }
+                cursorPos = textarea.value.length-numberPos;
+                textarea.setSelectionRange(numberPos,numberPos);
+                rowPos++;
+            }
+            break;
+
     }
 }
 
