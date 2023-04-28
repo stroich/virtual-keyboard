@@ -111,6 +111,7 @@ function getLocalStorage() {
 window.addEventListener('load', getLocalStorage);
 
 let textarea =document.querySelector('textarea');
+let caretPos =0;
 textarea.focus();
 textarea.addEventListener('blur',()=>textarea.focus());
 
@@ -149,6 +150,22 @@ document.addEventListener('keydown',(event)=>{
             capsLock = true;
         }
     }
+    if(event.code==='ArrowLeft'){
+        if (caretPos!==textarea.value.length){
+            caretPos+=1;
+        }
+    }
+    if (event.code==='ArrowRight' || event.code==='Delete'){
+        if (caretPos!==0){
+            caretPos-=1;
+        }
+    }
+    if (event.code==='Backspace'){
+        if (caretPos>textarea.value.length){
+            caretPos-=1;
+        }
+    }
+
 })
 document.addEventListener('keyup',(event)=>{
     let elementKeyboard = document.querySelectorAll('.virtual-keyboard-element');
@@ -188,8 +205,22 @@ function clickElement(event){
         textarea.value = textarea.value +event.currentTarget.outerText;
     }
     if (event.currentTarget.dataset.code==='Backspace'){
-        console.log(textarea.value.slice(0,textarea.value.length))
-        textarea.value = textarea.value.slice(0,textarea.value.length-1);
+        let newValue= textarea.value.split('');
+        newValue.splice(textarea.value.length-caretPos-1,1);
+        if (caretPos>textarea.value.length){
+            caretPos-=1;
+        }
+        textarea.value = newValue.join('');
+        textarea.setSelectionRange(textarea.value.length-caretPos,textarea.value.length-caretPos);
+    }
+    if (event.currentTarget.dataset.code==='Delete'){
+        let newValue= textarea.value.split('');
+        newValue.splice(textarea.value.length-caretPos,1);
+        if (caretPos!==0){
+            caretPos-=1;
+        }
+        textarea.value = newValue.join('');
+        textarea.setSelectionRange(textarea.value.length-caretPos,textarea.value.length-caretPos);
     }
     if(event.currentTarget.dataset.code==='Space'){
         textarea.value = textarea.value +' ';
@@ -207,7 +238,18 @@ function clickElement(event){
             enableCapslock();
             capsLock = true;
         }
-
+    }
+    if(event.currentTarget.dataset.code==='ArrowLeft'){
+        if (caretPos!==textarea.value.length){
+            caretPos+=1;
+        }
+        textarea.setSelectionRange(textarea.value.length-caretPos,textarea.value.length-caretPos);
+    }
+    if (event.currentTarget.dataset.code==='ArrowRight'){
+        if (caretPos!==0){
+            caretPos-=1;
+        }
+        textarea.setSelectionRange(textarea.value.length-caretPos,textarea.value.length-caretPos);
     }
 }
 
