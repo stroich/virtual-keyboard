@@ -234,15 +234,21 @@ function recalculatePositionDown (){
     cursorPos = textarea.value.length-numberPos;
     return numberPos;
 }
+function changeValue(element){
+    let newValue= textarea.value.split('');
+    newValue.splice(textarea.value.length-cursorPos,0,element);
+    textarea.value = newValue.join('');
+    textarea.setSelectionRange(textarea.value.length-cursorPos,textarea.value.length-cursorPos);
+}
 function clickMouseDown(event){
     event.currentTarget.classList.add('active');
     let newValue;
     let symbol =['Backquote','Minus', 'Equal','BracketLeft', 'BracketRight', 'Backslash','Semicolon', 'Quote','Slash','Comma', 'Period'];
     if (symbol.includes(event.currentTarget.dataset.code)){
-        textarea.value = textarea.value +event.currentTarget.outerText;
+        changeValue(event.currentTarget.outerText);
     }
     if(event.currentTarget.dataset.code.includes('Digit') || event.currentTarget.dataset.code.includes('Key')){
-        textarea.value = textarea.value +event.currentTarget.outerText;
+        changeValue(event.currentTarget.outerText);
     }
     switch (event.currentTarget.dataset.code){
         case 'Backspace':
@@ -266,16 +272,10 @@ function clickMouseDown(event){
             textarea.setSelectionRange(textarea.value.length-cursorPos,textarea.value.length-cursorPos);
             break;
         case 'Space':
-            newValue= textarea.value.split('');
-            newValue.splice(textarea.value.length-cursorPos,0,' ');
-            textarea.value = newValue.join('');
-            textarea.setSelectionRange(textarea.value.length-cursorPos,textarea.value.length-cursorPos);
+            changeValue(' ');
             break;
         case 'Tab':
-            newValue= textarea.value.split('');
-            newValue.splice(textarea.value.length-cursorPos,0,' ',' ',' ',' ');
-            textarea.value = newValue.join('');
-            textarea.setSelectionRange(textarea.value.length-cursorPos,textarea.value.length-cursorPos);
+            changeValue('    ')
             break;
         case 'CapsLock':
             if (capsLock){
@@ -303,10 +303,7 @@ function clickMouseDown(event){
             textarea.setSelectionRange(textarea.value.length-cursorPos,textarea.value.length-cursorPos);
             break;
         case 'Enter':
-            newValue= textarea.value.split('');
-            newValue.splice(textarea.value.length-cursorPos,0,'\n');
-            textarea.value = newValue.join('');
-            textarea.setSelectionRange(textarea.value.length-cursorPos,textarea.value.length-cursorPos);
+            changeValue('\n');
             rowPos++;
             break;
         case 'ArrowUp':
