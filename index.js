@@ -23,7 +23,7 @@ function generatingElements(){
     body.insertAdjacentHTML('afterbegin', container);
     let containerKeyboard = document.querySelectorAll('.virtual-keyboard-row');
     for (let i=0; i<5; i++){
-        keyboard[i][0][language].forEach((el,ind)=>{
+        keyboard[i][0][language][0].forEach((el,ind)=>{
             let elementKeyboard = document.createElement('div');
             elementKeyboard.classList.add('virtual-keyboard-element');
             elementKeyboard.dataset.code = keyboard[i][1][ind];
@@ -57,7 +57,17 @@ function changeLanguage(){
     rowsKeyboard.forEach((el,ind)=>{
         let elementKeyboard = el.querySelectorAll('.virtual-keyboard-element');
         elementKeyboard.forEach((element,index)=>{
-            element.innerHTML = keyboard[ind][0][language][index];
+            element.innerHTML = keyboard[ind][0][language][0][index];
+        })
+    })
+}
+function clickShift (place){
+    let rowsKeyboard = document.querySelectorAll('.virtual-keyboard-row');
+    rowsKeyboard.forEach((el,ind)=>{
+        let elementKeyboard = el.querySelectorAll('.virtual-keyboard-element');
+        elementKeyboard.forEach((element,index)=>{
+
+            element.innerHTML = keyboard[ind][0][language][place][index];
         })
     })
 }
@@ -151,6 +161,12 @@ document.addEventListener('keydown',(event)=>{
         textarea.value = newValue.join('');
         textarea.setSelectionRange(textarea.value.length-cursorPos,textarea.value.length-cursorPos);
     }
+    if (event.code==='ShiftLeft' || event.code==='ShiftRight'){
+        clickShift(1);
+        if (capsLock){
+            enableCapslock();
+        }
+    }
 })
 document.addEventListener('keyup',(event)=>{
     let elementKeyboard = document.querySelectorAll('.virtual-keyboard-element');
@@ -162,6 +178,14 @@ document.addEventListener('keyup',(event)=>{
     if(event.code==='CapsLock'&& capsLock){
         let capsLockElement =document.querySelector(`.virtual-keyboard-element[data-code='CapsLock']`);
         capsLockElement.classList.add('active');
+    }
+    if (event.code==='ShiftLeft' || event.code==='ShiftRight'){
+        clickShift(0);
+        if (capsLock){
+            capsLock = false;
+            enableCapslock();
+            capsLock = true;
+        }
     }
 })
 
@@ -210,7 +234,7 @@ function recalculatePositionDown (){
     cursorPos = textarea.value.length-numberPos;
     return numberPos;
 }
-function clickElement(event){
+function clickMouseDown(event){
     event.currentTarget.classList.add('active');
     let newValue;
     let symbol =['Backquote','Minus', 'Equal','BracketLeft', 'BracketRight', 'Backslash','Semicolon', 'Quote','Slash','Comma', 'Period'];
@@ -300,15 +324,31 @@ function clickElement(event){
                 rowPos++;
             }
             break;
-
+        case 'ShiftRight':
+        case 'ShiftLeft':
+            clickShift(1);
+            if (capsLock){
+                enableCapslock();
+            }
     }
 }
-
+function clickMouseUp(event){
+    event.currentTarget.classList.remove('active');
+    if(capsLock){
+        event.currentTarget.classList.add('active');
+    }
+    if (event.currentTarget.dataset.code==='ShiftLeft' || event.currentTarget.dataset.code==='ShiftRight'){
+        clickShift(0);
+        if (capsLock){
+            capsLock = false;
+            enableCapslock();
+            capsLock = true;
+        }
+    }
+}
 elementKeyboard.forEach(el=>{
-    el.addEventListener('mousedown',clickElement);
-    el.addEventListener('mouseup',(event)=>{
-        event.currentTarget.classList.remove('active');
-    });
+    el.addEventListener('mousedown',clickMouseDown);
+    el.addEventListener('mouseup',clickMouseUp);
     el.addEventListener('mouseover',(event)=>{
         event.currentTarget.classList.add('hover');
     });
