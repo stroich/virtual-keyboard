@@ -43,7 +43,7 @@ function generatingElements(){
     let container = `
     <div class="container">
       <h1 class="title">Виртуальная клавиатура</h1>
-      <textarea class="textarea"></textarea>
+      <textarea class="textarea" tabindex="0"></textarea>
       <div class="virtual-keyboard">
         <div class="virtual-keyboard-row"></div>
         <div class="virtual-keyboard-row"></div>
@@ -180,6 +180,13 @@ document.addEventListener('keydown',(event)=>{
     if (event.code==='ArrowDown'){
         recalculatePositionDown();
         rowPos++;
+    }
+    if (event.code==='Tab'){
+        event.preventDefault();
+        let newValue= textarea.value.split('');
+        newValue.splice(textarea.value.length-cursorPos,0,' ',' ',' ',' ');
+        textarea.value = newValue.join('');
+        textarea.setSelectionRange(textarea.value.length-cursorPos,textarea.value.length-cursorPos);
     }
 })
 document.addEventListener('keyup',(event)=>{
