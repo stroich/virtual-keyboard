@@ -242,6 +242,7 @@ function recalculatePositionDown (){
     return numberPos;
 }
 function clickElement(event){
+    let newValue;
     let symbol =['Backquote','Minus', 'Equal','BracketLeft', 'BracketRight', 'Backslash','Semicolon', 'Quote','Slash','Comma', 'Period'];
     if (symbol.includes(event.currentTarget.dataset.code)){
         textarea.value = textarea.value +event.currentTarget.outerText;
@@ -251,30 +252,36 @@ function clickElement(event){
     }
     switch (event.currentTarget.dataset.code){
         case 'Backspace':
-            let newValue= textarea.value.split('');
-            newValue.splice(textarea.value.length-caretPos-1,1);
-            if (caretPos>textarea.value.length){
+            newValue= textarea.value.split('');
+            newValue.splice(textarea.value.length-cursorPos-1,1);
+            if (cursorPos>textarea.value.length){
                 cursorPos-=1;
                 caretPos-=1;
             }
             textarea.value = newValue.join('');
-            textarea.setSelectionRange(textarea.value.length-caretPos,textarea.value.length-caretPos);
+            textarea.setSelectionRange(textarea.value.length-cursorPos,textarea.value.length-cursorPos);
             break;
         case 'Delete':
-            let newValueDelete= textarea.value.split('');
-            newValueDelete.splice(textarea.value.length-caretPos,1);
-            if (caretPos!==0){
+            newValue= textarea.value.split('');
+            newValue.splice(textarea.value.length-cursorPos,1);
+            if (cursorPos!==0){
                 cursorPos-=1;
                 caretPos-=1;
             }
-            textarea.value = newValueDelete.join('');
-            textarea.setSelectionRange(textarea.value.length-caretPos,textarea.value.length-caretPos);
+            textarea.value = newValue.join('');
+            textarea.setSelectionRange(textarea.value.length-cursorPos,textarea.value.length-cursorPos);
             break;
         case 'Space':
-            textarea.value = textarea.value +' ';
+            newValue= textarea.value.split('');
+            newValue.splice(textarea.value.length-cursorPos,0,' ');
+            textarea.value = newValue.join('');
+            textarea.setSelectionRange(textarea.value.length-cursorPos,textarea.value.length-cursorPos);
             break;
         case 'Tab':
-            textarea.value = textarea.value +'    ';
+            newValue= textarea.value.split('');
+            newValue.splice(textarea.value.length-cursorPos,0,' ',' ',' ',' ');
+            textarea.value = newValue.join('');
+            textarea.setSelectionRange(textarea.value.length-cursorPos,textarea.value.length-cursorPos);
             break;
         case 'CapsLock':
             if (capsLock){
@@ -282,7 +289,7 @@ function clickElement(event){
                 enableCapslock();
                 capsLock = false;
             }else{
-                event.currentTarget.classList.toggle('active');
+                event.currentTarget.classList.add('active');
                 enableCapslock();
                 capsLock = true;
             }
@@ -302,12 +309,15 @@ function clickElement(event){
             textarea.setSelectionRange(textarea.value.length-cursorPos,textarea.value.length-cursorPos);
             break;
         case 'Enter':
-            textarea.value = textarea.value +'\n';
+            newValue= textarea.value.split('');
+            newValue.splice(textarea.value.length-cursorPos,0,'\n');
+            textarea.value = newValue.join('');
+            textarea.setSelectionRange(textarea.value.length-cursorPos,textarea.value.length-cursorPos);
             rowPos++;
             break;
         case 'ArrowUp':
             if (rowPos!==0){
-                let positionUp =recalculatePositionUp ();
+                let positionUp =recalculatePositionUp();
                 textarea.setSelectionRange(positionUp,positionUp);
                 rowPos--;
             }
