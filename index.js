@@ -331,9 +331,6 @@ function clickMouseDown(event){
 }
 function clickMouseUp(event){
     event.currentTarget.classList.remove('active');
-    if(capsLock){
-        event.currentTarget.classList.add('active');
-    }
     if (event.currentTarget.dataset.code==='ShiftLeft' || event.currentTarget.dataset.code==='ShiftRight'){
         clickShift(0);
         if (capsLock){
@@ -351,6 +348,11 @@ elementKeyboard.forEach(el=>{
     });
     el.addEventListener('mouseout',(event)=>{
         event.currentTarget.classList.remove('hover');
+        event.currentTarget.classList.remove('active');
+        if(capsLock){
+            let caps = document.querySelector('.virtual-keyboard-element[data-code="CapsLock"]');
+            caps.classList.add('active');
+        }
     });
 })
 
