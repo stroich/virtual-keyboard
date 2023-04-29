@@ -199,7 +199,6 @@ document.addEventListener('keyup',(event)=>{
     if(event.code==='CapsLock'&& capsLock){
         let capsLockElement =document.querySelector(`.virtual-keyboard-element[data-code='CapsLock']`);
         capsLockElement.classList.add('active');
-
     }
 })
 
@@ -249,6 +248,7 @@ function recalculatePositionDown (){
     return numberPos;
 }
 function clickElement(event){
+    event.currentTarget.classList.add('active');
     let newValue;
     let symbol =['Backquote','Minus', 'Equal','BracketLeft', 'BracketRight', 'Backslash','Semicolon', 'Quote','Slash','Comma', 'Period'];
     if (symbol.includes(event.currentTarget.dataset.code)){
@@ -342,10 +342,7 @@ function clickElement(event){
 }
 
 elementKeyboard.forEach(el=>{
-    el.addEventListener('click', clickElement);
-    el.addEventListener('mousedown',(event)=>{
-        event.currentTarget.classList.add('active');
-    });
+    el.addEventListener('mousedown',clickElement);
     el.addEventListener('mouseup',(event)=>{
         event.currentTarget.classList.remove('active');
     });
