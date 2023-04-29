@@ -42,8 +42,8 @@
   text-align: center;
   line-height: 50px;
   box-shadow: 3px 3px #999;
-  transition: 0.3s;
 }
+
 .hover{
   cursor: pointer;
   background: #e1dcdc;
@@ -66,13 +66,25 @@
   width: auto;
   padding: 0 10px;
 }
-.active{
-  color: white;
-  background: #585858;
-  border: 1px solid #585858;
-  box-shadow: none;
-  transform: translate(3px);
+@keyframes animation-element {
+  0%{
+    color: black;
+    background: white;
+    border: 1px solid #999;
+    box-shadow: 3px 3px #999;
+  }
+  100%{
+    color: white;
+    background: #585858;
+    border: 1px solid #585858;
+    box-shadow: none;
+    transform: translate(3px);
+  }
 }
+.active{
+  animation: animation-element 0.3s forwards;
+}
+
 .textarea:focus-visible {
   outline: none;
 }
