@@ -1,0 +1,98 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+.body{
+  overflow-x: hidden;
+}
+
+.container{
+  margin: 5vh 20vw;
+  text-align: center;
+}
+
+.title{
+  margin-bottom: 3%;
+  font-size: 25px;
+}
+
+.textarea{
+  width: 100%;
+  height: 20vh;
+  margin-bottom: 10px;
+}
+
+.virtual-keyboard{
+  width: 100%;
+}
+
+.virtual-keyboard-row{
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.virtual-keyboard-element{
+  margin: 5px;
+  width: 50px;
+  height: 50px;
+  border: 1px solid #999;
+  text-align: center;
+  line-height: 50px;
+  box-shadow: 3px 3px #999;
+}
+
+.hover{
+  cursor: pointer;
+  background: #e1dcdc;
+  border: 1px solid #e1dcdc;
+}
+
+.element-wide{
+  width: 115px;
+  padding: 0 10px;
+}
+
+.backspace{
+  width: auto;
+  padding: 0 10px;
+}
+.space{
+  width: 400px;
+}
+.delete{
+  width: auto;
+  padding: 0 10px;
+}
+@keyframes animation-element {
+  0%{
+    color: black;
+    background: white;
+    border: 1px solid #999;
+    box-shadow: 3px 3px #999;
+  }
+  100%{
+    color: white;
+    background: #585858;
+    border: 1px solid #585858;
+    box-shadow: none;
+    transform: translate(3px);
+  }
+}
+.active{
+  animation: animation-element 0.3s forwards;
+}
+
+.textarea:focus-visible {
+  outline: none;
+}
+
+.text{
+  margin-top: 3vh;
+}
+
+.text-element{
+  margin-bottom: 1vh;
+}
